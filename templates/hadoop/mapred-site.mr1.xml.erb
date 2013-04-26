@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!-- NOTE:  This file is managed by Puppet. -->
+
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  <property>
+    <name>mapred.tasktracker.map.tasks.maximum</name>
+    <value><%= map_tasks_maximum %></value>
+  </property>
+  <property>
+   <name>mapred.tasktracker.reduce.tasks.maximum</name>
+   <value><%= reduce_tasks_maximum %></value>
+  </property>
+
+<% if @map_memory_mb -%>
+  <property>
+   <name>mapreduce.map.memory.mb</name>
+   <value><%= map_memory_mb %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_job_reuse_jvm_num_tasks -%>
+  <property>
+    <name>mapred.job.reuse.jvm.num.tasks</name>
+    <value><%= mapreduce_job_reuse_jvm_num_tasks %></value>
+  </property>
+<% end -%>
+
+<% if @mapreduce_child_java_opts -%>
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value><%= mapreduce_child_java_opts %></value>
+  </property>
+<% end -%>
+
+<% if @reduce_parallel_copies -%>
+  <property>
+    <name>mapred.reduce.parallel.copies</name>
+    <value><%= reduce_parallel_copies %></value>
+  </property>
+<% end -%>
+
+
+  <property>
+    <name>mapred.job.tracker</name>
+    <value><%= namenode_hostname %>:8021</value>
+  </property>
+  
+  <property>
+    <name>mapred.hosts.exclude</name>
+    <value><%= config_directory %>/hosts.exclude</value>
+    <description>
+      A file that contains a list of mapreduce hosts to exclude.
+      This is useful for decommissioning nodes.
+    </description>
+  </property>
+
+</configuration>
