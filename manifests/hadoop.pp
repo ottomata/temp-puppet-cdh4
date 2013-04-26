@@ -1,3 +1,19 @@
+# manual stepts
+# Format namenode
+# - sudo -u hdfs hadoop namenode -format
+# 
+# Create hdfs dirs:
+#   sudo -u hdfs hadoop fs -mkdir /tmp
+#   sudo -u hdfs hadoop fs -chmod -R 1777 /tmp
+#   sudo -u hdfs hadoop fs -mkdir /user/history
+#   sudo -u hdfs hadoop fs -chmod -R 1777 /user/history
+#   sudo -u hdfs hadoop fs -chown yarn /user/history
+#   sudo -u hdfs hadoop fs -mkdir /var/log/hadoop-yarn
+#   sudo -u hdfs hadoop fs -chown yarn:mapred /var/log/hadoop-yarn
+# On datanodes, create YARN dirs:
+#   sudo mkdir
+
+#
 # == Class cdh4::hadoop
 #
 # Installs the main Hadoop/HDFS packages and config files.  This
@@ -38,6 +54,7 @@
 #   - ¿Manage each hadoop directory in datanode_mounts in puppet?
 #   - Add parameters for historyserver, proxyserver, resourcemanager hostnames, etc.
 #   - Set default map/reduce tasks automatically based on node stats.
+#   - Handle ensure => absent, especially for MRv1 vs YARN packages and services.
 class cdh4::hadoop(
   $namenode_hostname,
   $dfs_name_dir,
@@ -59,7 +76,7 @@ class cdh4::hadoop(
   $mapreduce_job_reuse_jvm_num_tasks = $::cdh4::hadoop::defaults::mapreduce_job_reuse_jvm_num_tasks,
   $mapreduce_child_java_opts         = $::cdh4::hadoop::defaults::mapreduce_child_java_opts,
   $use_yarn                          = $::cdh4::hadoop::defaults::use_yarn,
-)  inherits cdh4::hadoop::defaults
+) inherits cdh4::hadoop::defaults
 {
   # JMX Ports
   $namenode_jmxremote_port           = 9980
@@ -118,3 +135,4 @@ class cdh4::hadoop(
       content => template('cdh4/hadoop/yarn-env.sh.erb');
   }
 }
+
