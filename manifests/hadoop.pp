@@ -1,18 +1,3 @@
-# manual stepts
-# Format namenode
-# - sudo -u hdfs hadoop namenode -format
-# 
-# Create hdfs dirs:
-#   sudo -u hdfs hadoop fs -mkdir /tmp
-#   sudo -u hdfs hadoop fs -chmod -R 1777 /tmp
-#   sudo -u hdfs hadoop fs -mkdir /user/history
-#   sudo -u hdfs hadoop fs -chmod -R 1777 /user/history
-#   sudo -u hdfs hadoop fs -chown yarn /user/history
-#   sudo -u hdfs hadoop fs -mkdir /var/log/hadoop-yarn
-#   sudo -u hdfs hadoop fs -chown yarn:mapred /var/log/hadoop-yarn
-# On datanodes, create YARN dirs:
-#   sudo mkdir
-
 #
 # == Class cdh4::hadoop
 #
@@ -47,14 +32,6 @@
 #   $mapreduce_child_java_opts
 #   $use_yarn
 #
-# TODO:
-#   - Add hadoop-metrics2.properties configuration
-#   - Add hosts.exclude support for decommissioning nodes.
-#   - ¿Change cluster (conf) name?  (use update-alternatives?)
-#   - ¿Manage each hadoop directory in datanode_mounts in puppet?
-#   - Add parameters for historyserver, proxyserver, resourcemanager hostnames, etc.
-#   - Set default map/reduce tasks automatically based on node stats.
-#   - Handle ensure => absent, especially for MRv1 vs YARN packages and services.
 class cdh4::hadoop(
   $namenode_hostname,
   $dfs_name_dir,
@@ -100,11 +77,6 @@ class cdh4::hadoop(
     false   => 'absent',
     default => 'present',
   }
-  # Use yarn or MRv1 mapred-site.xml template?
-  $mapred_template = $use_yarn ? {
-    false   => 'cdh4/hadoop/mapred-site.mr1.xml.erb',
-    default => 'cdh4/hadoop/mapred-site.xml.erb',
-  }
 
   # Common hadoop config files
   file {
@@ -117,6 +89,9 @@ class cdh4::hadoop(
     "${config_directory}/core-site.xml":
       content => template('cdh4/hadoop/core-site.xml.erb');
 
+    "$config_directory/hdfs-site.xml":
+      content => template('cdh4/hadoop/hdfs-site.xml.erb');
+
     "$config_directory/httpfs-site.xml":
       content => template('cdh4/hadoop/httpfs-site.xml.erb');
 
@@ -124,7 +99,7 @@ class cdh4::hadoop(
       content => template('cdh4/hadoop/hadoop-env.sh.erb');
 
     "${config_directory}/mapred-site.xml":
-      content => template($mapred_template);
+      content => template('cdh4/hadoop/mapred-site.xml.erb');
 
     "${config_directory}/yarn-site.xml":
       ensure  => $yarn_ensure,

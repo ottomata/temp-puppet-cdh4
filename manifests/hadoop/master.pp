@@ -1,7 +1,10 @@
 # == Class cdh4::hadoop::master
 # Wrapper class for Hadoop master node services:
 # - NameNode
-# - ResourceManager (YARN), JobTracker (MRv1).
+# - ResourceManager and HistoryServer (YARN)
+# OR
+# - JobTracker (MRv1).
+#
 class cdh4::hadoop::master {
   require cdh4::hadoop
 

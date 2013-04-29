@@ -1,4 +1,5 @@
 # == Class cdh4::hadoop::datanode
+# Installs and starts up a Hadoop DataNode.
 #
 class cdh4::hadoop::datanode {
   require cdh4::hadoop
@@ -13,5 +14,6 @@ class cdh4::hadoop::datanode {
     ensure  => 'running',
     enable  => true,
     alias   => 'datanode',
+    require => Package['hadoop-hdfs-datanode'],
   }
 }

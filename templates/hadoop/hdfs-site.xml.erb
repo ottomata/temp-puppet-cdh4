@@ -13,13 +13,13 @@
 
   <property>
    <name>dfs.namenode.name.dir</name>
-   <value><%= (dfs_name_dir.class == Array) ? dfs_name_dir.join(',') : dfs_name_dir %></value>
+   <value>file://<%= (dfs_name_dir.class == Array) ? dfs_name_dir.join(',file://') : dfs_name_dir %></value>
   </property>
 
 <% if @datanode_mounts -%>
   <property>
    <name>dfs.datanode.data.dir</name>
-   <value><%= datanode_mounts.collect { |mount| mount + "/" + dfs_data_path }.join(',') %></value>
+   <value>file://<%= datanode_mounts.collect { |mount| mount + "/" + dfs_data_path }.join(',file://') %></value>
   </property>
 <% end -%>
 

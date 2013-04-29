@@ -1,4 +1,5 @@
 # == Class cdh4::hadoop::defaults
+# Default parameters for cdh4::hadoop configuration.
 #
 class cdh4::hadoop::defaults {
   $config_directory                  = '/etc/hadoop/conf'

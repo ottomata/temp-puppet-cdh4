@@ -4,8 +4,9 @@
 <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
 
 <!-- Put site-specific property overrides in this file. -->
-
 <configuration>
+
+<% if @use_yarn -%>
   <property>
    <name>mapreduce.framework.name</name>
    <value>yarn</value>
@@ -30,6 +31,19 @@
     <name>mapreduce.jobhistory.done-dir</name>
     <value>/user/history/done</value>
   </property>
+  
+  <property>
+    <name>mapred.job.tracker</name>
+     <!-- Hue gets confused if mapred.job.tracker is not set,
+       even though we are using YARN and the jobtracker is not running. -->
+    <value>localhost:8021</value>
+  </property>
+<% else -%>
+  <property>
+    <name>mapred.job.tracker</name>
+    <value><%= namenode_hostname %>:8021</value>
+  </property>
+<% end -%>
 
 <% if @map_tasks_maximum -%>
   <property>
@@ -73,14 +87,6 @@
   </property>
 <% end -%>
 
-
-  <property>
-    <name>mapred.job.tracker</name>
-     <!-- Hue gets confused if mapred.job.tracker is not set,
-       even though we are using YARN and the jobtracker is not running. -->
-    <value>localhost:8021</value>
-  </property>
-  
   <property>
     <name>mapred.hosts.exclude</name>
     <value><%= config_directory %>/hosts.exclude</value>
