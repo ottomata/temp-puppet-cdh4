@@ -110,4 +110,3 @@ class cdh4::hadoop(
       content => template('cdh4/hadoop/yarn-env.sh.erb');
   }
 }
-
